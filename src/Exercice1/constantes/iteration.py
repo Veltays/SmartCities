@@ -1,1 +1,0 @@
-BIP_ITERATION = 10

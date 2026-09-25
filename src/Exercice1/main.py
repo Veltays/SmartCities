@@ -1,9 +1,37 @@
 import utime
-from constantes.pin import LED_PIN
+from constantes.pin import BUTTON_PIN, LED_PIN
+from constantes.press_case import (
+    LONG_PRESS_CASE,
+    NO_PRESS_CASE,
+    SHORT_PRESS_CASE,
+    VERY_LONG_PRESS_CASE,
+)
+from constantes.time import SLEEP_TIME
+from drivers.button import button
 from drivers.led import led
 
 myLed = led(LED_PIN)
+myButton = button(BUTTON_PIN)
+
 
 while True:
-    myLed.toggle()
-    utime.sleep(2)
+
+    buttonState = myButton.is_pressed()
+
+    if buttonState == SHORT_PRESS_CASE:
+        print("Short press detected")
+        myLed.bip()
+
+    elif buttonState == LONG_PRESS_CASE:
+        print("Long press detected")
+        myLed.gradiants()
+        
+
+    elif buttonState == VERY_LONG_PRESS_CASE:
+        print("Very long press detected")
+        
+
+    elif buttonState == NO_PRESS_CASE:
+        print("No press detected")
+
+    utime.sleep(SLEEP_TIME)

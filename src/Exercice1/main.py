@@ -1,3 +1,4 @@
+from services.timer import timer
 import utime
 from constantes.pin import BUTTON_PIN, LED_PIN
 from constantes.press_case import (
@@ -10,28 +11,43 @@ from constantes.time import SLEEP_TIME
 from drivers.button import button
 from drivers.led import led
 
-myLed = led(LED_PIN)
-myButton = button(BUTTON_PIN)
+
+def main():
+
+    # Initialisations des composants
+    myTimer = timer()
+    myLed = led(LED_PIN)
+    # Injections de dépendances dans boutons pour gestions des appuies
+    myButton = button(BUTTON_PIN,myTimer)
 
 
-while True:
 
-    buttonState = myButton.is_pressed()
+    # Boucle principale
+    while True:
 
-    if buttonState == SHORT_PRESS_CASE:
-        print("Short press detected")
-        myLed.bip()
+        buttonState = myButton.is_pressed()
 
-    elif buttonState == LONG_PRESS_CASE:
-        print("Long press detected")
-        myLed.gradiants()
-        
+        if buttonState == SHORT_PRESS_CASE:
+            print("Short press detected")
+            myLed.bip()
 
-    elif buttonState == VERY_LONG_PRESS_CASE:
-        print("Very long press detected")
-        
+        elif buttonState == LONG_PRESS_CASE:
+            print("Long press detected")
+            myLed.gradiants()
+            
 
-    elif buttonState == NO_PRESS_CASE:
-        print("No press detected")
+        elif buttonState == VERY_LONG_PRESS_CASE:
+            print("Very long press detected")
+            
 
-    utime.sleep(SLEEP_TIME)
+        elif buttonState == NO_PRESS_CASE:
+            print("No press detected")
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()

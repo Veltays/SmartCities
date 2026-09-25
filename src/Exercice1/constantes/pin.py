@@ -1,4 +1,3 @@
-
 import machine
 
 LED_PIN = machine.Pin(18, machine.Pin.OUT)

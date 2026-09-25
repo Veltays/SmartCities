@@ -37,10 +37,13 @@ class led:
 
 
     def gradiants(self):
+        print("Gradiants")
+
 
 
     def set_value(self, value):
         print("Setting value: " + str(value))
+        
         if(value > 0 and value < 255):
             self.currentValue = value
         else:

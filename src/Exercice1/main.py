@@ -14,7 +14,7 @@ def main():
 
     # Initialisations des composants
     myTimer = timer()
-    myLed = led(LED_PIN)
+    myLed = led(LED_PIN,myTimer)
     # Injections de dépendances dans boutons pour gestions des appuies
     myButton = button(BUTTON_PIN,myTimer)
 
@@ -27,19 +27,21 @@ def main():
 
         if buttonState == SHORT_PRESS_CASE:
             print("Short press detected")
-            myLed.bip()
+            myLed.toggle()
 
         elif buttonState == LONG_PRESS_CASE:
             print("Long press detected")
-            myLed.fade_in_out()
+            myLed.bip()
             
 
         elif buttonState == VERY_LONG_PRESS_CASE:
             print("Very long press detected")
+            myLed.ticktack()
             
 
         elif buttonState == NO_PRESS_CASE:
             myLed.off()
+            print("No press detected")
 
         myTimer.sleep()
 

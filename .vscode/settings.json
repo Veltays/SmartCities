@@ -15,5 +15,7 @@
     "python.analysis.extraPaths": [
         "~/.micropico-stubs/included"
     ],
-    "micropico.syncFolder": "src\\Exercice1"
+    "micropico.syncFolder": "src/Exercice1",
+    "micropico.alwaysStopRunningProgram": true,
+    "micropico.softResetAfterUpload": true
 }

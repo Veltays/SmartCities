@@ -7,8 +7,8 @@ bouton-poussoir. Chaque appui sur le bouton change le niveau de fonctionnement
 de la LED : sa vitesse de clignotement évolue, elle peut s'éteindre ou exécuter
 un effet lumineux.
 
-Le programme comporte cinq niveaux. Il démarre au niveau 1 et, une fois le
-dernier niveau atteint, un nouvel appui ramène au premier niveau.
+Le programme comporte cinq niveaux. Une fois le dernier niveau atteint, un
+nouvel appui ramène au premier niveau.
 
 ## Matériel utilisé
 
@@ -78,13 +78,13 @@ la logique principale.
 
 ### Comportement des niveaux
 
-| Niveau | Délai entre deux changements d'état | Comportement |
-|---:|---:|---|
-| 1 | 2 s | Clignotement lent (état initial) |
-| 2 | 1 s | Clignotement à 0,5 Hz |
-| 3 | — | LED éteinte |
-| 4 | 0,5 s | Clignotement à 1 Hz |
-| 5 | Délai décroissant | Effet `TicTicBoom` avec accélération progressive |
+| Niveau | Comportement |
+|---:|---|  
+| 1 | Clignotement lent |
+| 2 | Clignotement plus rapide |
+| 3 | LED éteinte |
+| 4 | Clignotement encore plus rapide |
+| 5 | Effet `TicTicBoom`, avec accélération progressive |
 
 Pour les niveaux classiques, le délai entre deux changements d'état est :
 
@@ -92,16 +92,13 @@ Pour les niveaux classiques, le délai entre deux changements d'état est :
 delay = SLEEP_TIME / LevelNumber
 ```
 
-Avec `SLEEP_TIME = 2`, cette formule donne les délais indiqués dans le tableau.
-Les niveaux 3 et 5 possèdent un comportement particulier et n'utilisent pas ce
-calcul pour commander la LED.
+Un niveau plus élevé réduit donc le délai et accélère le clignotement.
 
 ### Fréquence de clignotement
 
-Une période complète comprend deux changements d'état : un allumage et une
+Une période complète comprend deux changements d'état : allumage puis
 extinction. Pour obtenir une fréquence de **0,5 Hz**, une période complète doit
-durer deux secondes. La LED doit donc changer d'état toutes les secondes, comme
-au niveau 2.
+durer deux secondes. La LED doit donc changer d'état toutes les secondes.
 
 La relation utilisée est :
 
@@ -109,19 +106,8 @@ La relation utilisée est :
 fréquence = 1 / période
 ```
 
-## Attente avec écoute du bouton
+ce qui nous donne donc un premier délais de 2 secondes
 
-La méthode `sleep_listening()` de `services/timer.py` remplace une attente
-totalement bloquante. Pendant le délai, elle vérifie continuellement l'état du
-bouton :
-
-- elle retourne `True` lorsque le délai se termine normalement ;
-- elle retourne `False` lorsqu'un appui est détecté avant la fin du délai ;
-- une courte pause de 100 ms après la détection réduit l'effet des rebonds
-  mécaniques du bouton.
-
-Cette méthode rend le changement de niveau plus réactif, y compris pendant un
-clignotement lent.
 
 ## Effet bonus : `TicTicBoom`
 
@@ -132,21 +118,21 @@ la LED accélère.
 L'effet utilise également `sleep_listening()`. Un appui sur le bouton peut donc
 l'interrompre sans attendre la fin complète de l'animation.
 
-## Modifications apportées
 
-- ajout de cinq niveaux configurables avec `NUMBER_OF_LEVELS` ;
-- ajout de `setup()` et `loop()` pour clarifier le cycle du programme ;
-- calcul automatique du délai selon le niveau courant ;
-- ajout de `sleep_listening()` pour surveiller le bouton pendant les attentes ;
-- ajout d'une courte temporisation pour limiter les rebonds du bouton ;
-- ajout du service `led_effect.py` et de l'effet accéléré `TicTicBoom` ;
-- possibilité d'interrompre l'effet lumineux avec le bouton ;
-- centralisation des broches, du délai de base et du nombre de niveaux dans le
-  dossier `constantes/`.
+# Problème rencontrer 
 
-## Lancement
+Sleep était bloquant, le code ne pouvait donc pas voir si une actualisations des boutons avait été fait, n'ayant pas vu les interuptions sytème sur une GPIO j'ai du trouver une solutions
 
-1. Réaliser le branchement indiqué ci-dessus.
-2. Copier le dossier `Exercice1` sur le Raspberry Pi Pico.
-3. Exécuter `main.py` avec MicroPython.
-4. Appuyer sur le bouton pour parcourir les différents niveaux.
+## Attente avec écoute du bouton
+
+La méthode `sleep_listening()` de `services/timer.py` remplace une attente
+totalement bloquante. Pendant le délai, elle vérifie continuellement l'état du
+bouton :
+
+- elle retourne `True` lorsque le délai se termine normalement ;
+- elle retourne `False` lorsqu'un appui est détecté avant la fin du délai ;
+- une courte pause de 100 ms limite les détections multiples provoquées par les
+  rebonds mécaniques du bouton.
+
+Cette méthode rend le changement de niveau plus réactif, y compris pendant un
+clignotement lent.

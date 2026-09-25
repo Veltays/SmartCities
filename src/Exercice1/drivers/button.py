@@ -3,11 +3,19 @@ from constantes.time import SHORT_PRESS_TIME, LONG_PRESS_TIME, VERY_LONG_PRESS_T
 from constantes.press_case import NO_PRESS_CASE, SHORT_PRESS_CASE, LONG_PRESS_CASE, VERY_LONG_PRESS_CASE
 
 
+
+
 class button:
+
+
+
     def __init__(self, pin, myTimer):
         self.pin = pin
         self.pin.init(self.pin.IN)
         self.myTimer = myTimer
+        self.numberOfPresses = 0
+
+
 
 
     def is_pressed(self):

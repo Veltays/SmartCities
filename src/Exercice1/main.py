@@ -25,23 +25,6 @@ def main():
 
         buttonState = myButton.is_pressed()
 
-        if buttonState == SHORT_PRESS_CASE:
-            print("Short press detected")
-            myLed.toggle()
-
-        elif buttonState == LONG_PRESS_CASE:
-            print("Long press detected")
-            myLed.bip()
-            
-
-        elif buttonState == VERY_LONG_PRESS_CASE:
-            print("Very long press detected")
-            myLed.ticktack()
-            
-
-        elif buttonState == NO_PRESS_CASE:
-            myLed.off()
-            print("No press detected")
 
         myTimer.sleep()
 

@@ -1,5 +1,4 @@
 from services.timer import timer
-import utime
 from constantes.pin import BUTTON_PIN, LED_PIN
 from constantes.press_case import (
     LONG_PRESS_CASE,
@@ -7,7 +6,6 @@ from constantes.press_case import (
     SHORT_PRESS_CASE,
     VERY_LONG_PRESS_CASE,
 )
-from constantes.time import SLEEP_TIME
 from drivers.button import button
 from drivers.led import led
 
@@ -33,7 +31,7 @@ def main():
 
         elif buttonState == LONG_PRESS_CASE:
             print("Long press detected")
-            myLed.gradiants()
+            myLed.fade_in_out()
             
 
         elif buttonState == VERY_LONG_PRESS_CASE:
@@ -41,7 +39,9 @@ def main():
             
 
         elif buttonState == NO_PRESS_CASE:
-            print("No press detected")
+            myLed.off()
+
+        myTimer.sleep()
 
 
 

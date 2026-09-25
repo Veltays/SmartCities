@@ -12,24 +12,21 @@ class button:
 
     def is_pressed(self):
 
-        # Timer d'attentes pour déterminer la durée de l'appui sur le boutons
         self.myTimer.start()
 
-        while(self.pin.value() == 1):
+        while self.pin.value() == 1:
             utime.sleep(SLEEP_TIME)
 
         timeElapsed = self.myTimer.stop()
 
+        if timeElapsed < SHORT_PRESS_TIME:
+            return NO_PRESS_CASE
 
-        match timeElapsed:
-            case timeElapsed if timeElapsed < SHORT_PRESS_TIME:
-                return SHORT_PRESS_CASE
-            case timeElapsed if timeElapsed < LONG_PRESS_TIME:
-                return LONG_PRESS_CASE
-            case timeElapsed if timeElapsed < VERY_LONG_PRESS_TIME:
-                return VERY_LONG_PRESS_CASE
+        elif timeElapsed < LONG_PRESS_TIME:
+            return SHORT_PRESS_CASE
 
-        return NO_PRESS_CASE
+        elif timeElapsed < VERY_LONG_PRESS_TIME:
+            return LONG_PRESS_CASE
 
-
-
+        else:
+            return VERY_LONG_PRESS_CASE

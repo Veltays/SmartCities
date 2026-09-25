@@ -1,3 +1,4 @@
+from constantes.time import SLEEP_TIME
 import utime
 
 class timer:
@@ -13,4 +14,6 @@ class timer:
     def stop(self):
         self.end_time = utime.ticks_ms()
         return utime.ticks_diff(self.end_time, self.start_time)
-    
+
+    def sleep(self, duration = SLEEP_TIME):
+        utime.sleep(duration)

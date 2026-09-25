@@ -17,21 +17,24 @@ Ce répertoire concernera l'ensemble des LED simple, bouton-poussoir, interrupti
 
 
 ## AD-PWM 
+- [AD-PWM](documentation/AD-PWM)
 lecture du potentiomètre, PWM (LED, musique, servo).
 
 
 ## LCD 
- documentation des fonctions de la librairie, affichage de la valeur du potentiomètre.
+- [LCD](documentation/LCD)
+    documentation des fonctions de la librairie, affichage de la valeur du potentiomètre.
 
 ## LED_neo 
- utilisation des LEDs néopixel, documentation des fonctions de la librairie, arc-en-ciel.
-sensors : température et humidité, luminosité, PIR.
-network : Accès réseau avec le RPi Pico.
-
-
-
-- [AD-PWM](documentation/AD-PWM)
-- [LCD](documentation/LCD)
 - [LED Neo](documentation/LED_neo)
+
+    utilisation des LEDs néopixel, documentation des fonctions de la librairie, arc-en-ciel.
+    sensors : température et humidité, luminosité, PIR.
+    network : Accès réseau avec le RPi Pico.
+
+
+
+
+
 - [Sensors](documentation/sensors)
 - [Network](documentation/network)

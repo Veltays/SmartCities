@@ -135,4 +135,6 @@ bouton :
   rebonds mécaniques du bouton.
 
 Cette méthode rend le changement de niveau plus réactif, y compris pendant un
-clignotement lent.
+clignotement lent, dans l'idée le mieux serait un debounce mais nous n'avons pas encore vu cette notions donc on avise.
+
+

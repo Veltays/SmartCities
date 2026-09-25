@@ -1,10 +1,14 @@
-# Exercice 1 — Contrôle d'une LED avec un bouton
+# Exercice 1 — Clignotement d'une LED avec un bouton-poussoir
 
 ## Objectif
 
-Cet exercice consiste à réaliser un montage électronique autour d'un **Raspberry Pi Pico 2 W**, d'un bouton et d'une LED.
+Ce projet MicroPython utilise un **Raspberry Pi Pico 2 W**, une LED et un
+bouton-poussoir. Chaque appui sur le bouton change le niveau de fonctionnement
+de la LED : sa vitesse de clignotement évolue, elle peut s'éteindre ou exécuter
+un effet lumineux.
 
-La LED clignote en continu. Chaque fois qu'un appui sur le bouton est détecté, le niveau augmente, ce qui réduit le délai entre deux changements d'état. Après le dixième niveau, le programme revient au premier.
+Le programme comporte cinq niveaux. Il démarre au niveau 1 et, une fois le
+dernier niveau atteint, un nouvel appui ramène au premier niveau.
 
 ## Matériel utilisé
 
@@ -25,59 +29,124 @@ La LED clignote en continu. Chaque fois qu'un appui sur le bouton est détecté,
 | Composant | Broche du Pico | Mode |
 |---|---:|---|
 | LED | GPIO 18 | Sortie |
-| Bouton | GPIO 16 | Entrée |
+| Bouton-poussoir | GPIO 16 | Entrée |
 
-Les broches utilisées sont déclarées dans `constantes/pin.py` afin de centraliser la configuration matérielle.
+Les broches sont configurées dans `constantes/pin.py`. Il suffit de modifier ce
+fichier pour adapter le programme à un autre branchement.
 
 ## Organisation du code
 
 ![Schéma de l'architecture du programme](../../documentation/SCHEMA/exercice1_schema_developement.png)
 
-Le programme est séparé en plusieurs parties :
-
-- `drivers/` contient les classes qui pilotent les composants matériels :
-  - `button.py` lit l'état du bouton ;
-  - `led.py` contrôle l'état de la LED.
-- `services/` contient la logique utilitaire :
-  - `timer.py` gère les temporisations utilisées par l'application.
-- `constantes/` centralise les paramètres du programme :
-  - `pin.py` configure les GPIO de la LED et du bouton ;
-  - `time.py` définit le délai de base ;
-  - `config.py` définit le nombre de niveaux.
-- `main.py` est le point d'entrée de l'application.
-
 ```text
 Exercice1/
 ├── constantes/
-│   ├── config.py
-│   ├── pin.py
-│   └── time.py
+│   ├── config.py       # nombre de niveaux
+│   ├── pin.py          # configuration des GPIO
+│   └── time.py         # délai de base
 ├── drivers/
-│   ├── button.py
-│   └── led.py
+│   ├── button.py       # lecture du bouton
+│   └── led.py          # contrôle de la LED
 ├── services/
-│   └── timer.py
-└── main.py
+│   ├── led_effect.py   # effet lumineux bonus
+│   └── timer.py        # temporisations et écoute du bouton
+├── main.py             # point d'entrée du programme
+└── README.md
 ```
 
-## Fonctionnement du programme
+Cette séparation permet de ne pas mélanger la configuration matérielle, le
+pilotage des composants et la logique de l'application.
 
-Le fichier `main.py` contient deux fonctions principales :
+## Fonctionnement
 
-1. `setup()` initialise le timer, la LED et le bouton, puis injecte les dépendances nécessaires aux différents composants.
-2. `loop()` exécute la boucle principale : elle détecte les appuis sur le bouton, met à jour le niveau, inverse l'état de la LED et adapte le délai de clignotement.
+Le fichier `main.py` est organisé autour de deux fonctions :
 
-Le délai est calculé de la manière suivante :
+1. `setup()` crée le timer, la LED et le bouton, puis injecte les dépendances
+   nécessaires aux composants ;
+2. `loop()` exécute la boucle principale, détecte les appuis et sélectionne le
+   comportement correspondant au niveau courant.
+
+Le niveau suivant est calculé avec un modulo :
+
+```python
+LevelNumber = LevelNumber % NUMBER_OF_LEVELS + 1
+```
+
+La valeur `NUMBER_OF_LEVELS`, définie dans `constantes/config.py`, permet de
+modifier le nombre total de niveaux sans inscrire directement cette valeur dans
+la logique principale.
+
+### Comportement des niveaux
+
+| Niveau | Délai entre deux changements d'état | Comportement |
+|---:|---:|---|
+| 1 | 2 s | Clignotement lent (état initial) |
+| 2 | 1 s | Clignotement à 0,5 Hz |
+| 3 | — | LED éteinte |
+| 4 | 0,5 s | Clignotement à 1 Hz |
+| 5 | Délai décroissant | Effet `TicTicBoom` avec accélération progressive |
+
+Pour les niveaux classiques, le délai entre deux changements d'état est :
 
 ```python
 delay = SLEEP_TIME / LevelNumber
 ```
 
-Plus le niveau est élevé, plus le délai est court et plus la LED clignote rapidement.
+Avec `SLEEP_TIME = 2`, cette formule donne les délais indiqués dans le tableau.
+Les niveaux 3 et 5 possèdent un comportement particulier et n'utilisent pas ce
+calcul pour commander la LED.
 
-## Respect des consignes
+### Fréquence de clignotement
 
-Par défaut la led à un SLEEP_TIME de 0.5hz:
+Une période complète comprend deux changements d'état : un allumage et une
+extinction. Pour obtenir une fréquence de **0,5 Hz**, une période complète doit
+durer deux secondes. La LED doit donc changer d'état toutes les secondes, comme
+au niveau 2.
 
-Soit 1/0.5Hz = 2 secondes
+La relation utilisée est :
 
+```text
+fréquence = 1 / période
+```
+
+## Attente avec écoute du bouton
+
+La méthode `sleep_listening()` de `services/timer.py` remplace une attente
+totalement bloquante. Pendant le délai, elle vérifie continuellement l'état du
+bouton :
+
+- elle retourne `True` lorsque le délai se termine normalement ;
+- elle retourne `False` lorsqu'un appui est détecté avant la fin du délai ;
+- une courte pause de 100 ms après la détection réduit l'effet des rebonds
+  mécaniques du bouton.
+
+Cette méthode rend le changement de niveau plus réactif, y compris pendant un
+clignotement lent.
+
+## Effet bonus : `TicTicBoom`
+
+Le niveau 5 lance l'effet défini dans `services/led_effect.py`. Le délai entre
+les changements d'état diminue progressivement, ce qui donne l'impression que
+la LED accélère.
+
+L'effet utilise également `sleep_listening()`. Un appui sur le bouton peut donc
+l'interrompre sans attendre la fin complète de l'animation.
+
+## Modifications apportées
+
+- ajout de cinq niveaux configurables avec `NUMBER_OF_LEVELS` ;
+- ajout de `setup()` et `loop()` pour clarifier le cycle du programme ;
+- calcul automatique du délai selon le niveau courant ;
+- ajout de `sleep_listening()` pour surveiller le bouton pendant les attentes ;
+- ajout d'une courte temporisation pour limiter les rebonds du bouton ;
+- ajout du service `led_effect.py` et de l'effet accéléré `TicTicBoom` ;
+- possibilité d'interrompre l'effet lumineux avec le bouton ;
+- centralisation des broches, du délai de base et du nombre de niveaux dans le
+  dossier `constantes/`.
+
+## Lancement
+
+1. Réaliser le branchement indiqué ci-dessus.
+2. Copier le dossier `Exercice1` sur le Raspberry Pi Pico.
+3. Exécuter `main.py` avec MicroPython.
+4. Appuyer sur le bouton pour parcourir les différents niveaux.

@@ -34,6 +34,9 @@ nouvel appui ramène au premier niveau.
 Les broches sont configurées dans `constantes/pin.py`. Il suffit de modifier ce
 fichier pour adapter le programme à un autre branchement.
 
+
+![Photo de branchement](../../documentation/GPIO/circuit.gif)
+
 ## Organisation du code
 
 ![Schéma de l'architecture du programme](../../documentation/SCHEMA/exercice1_schema_developement.png)

@@ -1,11 +1,23 @@
 def effect_TicTicBoom(myLed, myTimer,myButton):
 
-        currentFrequency = 1
+        currentTiming = 1
 
 
-        while currentFrequency > 0 :
+        while currentTiming > 0 :
             myLed.toggle()
-            currentFrequency -= 0.05
-            if(myTimer.sleep_listening(currentFrequency, myButton) == False):
+            currentTiming -= 0.05
+            if(myTimer.sleep_listening(currentTiming, myButton) == False):
                 return
- 
+
+
+
+def effect_blink(myLed, myTimer,myButton):
+    myLed.on()
+
+    while True:
+        if(myTimer.sleep_listening(0.5, myButton) == False):
+            break 
+
+    myLed.off()
+    
+    return

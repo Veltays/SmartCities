@@ -19,21 +19,56 @@ class PlayNote():
 
 
 
-    def one_piece_song(self):
+    def au_clair_de_la_lune(self):
         notes = [
-            NOTE_LA, NOTE_LA, NOTE_SO,
-            NOTE_SO, NOTE_MI, NOTE_DO, NOTE_LA,
-            NOTE_LA, NOTE_MI, NOTE_RE,
-            NOTE_SO, NOTE_LA
+            NOTE_DO, NOTE_DO, NOTE_DO, NOTE_RE, NOTE_MI,
+            NOTE_RE, NOTE_DO, NOTE_MI, NOTE_RE, NOTE_RE, NOTE_DO,
+
+            NOTE_RE, NOTE_RE, NOTE_RE, NOTE_RE, NOTE_LA,
+            NOTE_LA, NOTE_RE, NOTE_DO, NOTE_SI, NOTE_LA, NOTE_SO
         ]
 
         durations = [
-            0.30, 0.30, 0.60,
-            0.30, 0.30, 0.30, 0.60,
-            0.30, 0.30, 0.60,
-            0.30, 0.90
+            0.30, 0.30, 0.30, 0.30, 0.60,
+            0.30, 0.30, 0.30, 0.30, 0.30, 0.60,
+
+            0.30, 0.30, 0.30, 0.30, 0.60,
+            0.30, 0.30, 0.30, 0.30, 0.30, 0.90
         ]
+
         for note, duration in zip(notes, durations):
             volume = self.myPotentiometer.getValue()
-            print("Valeur du potentio",self.myPotentiometer.getCurrentValue())
+            self.play_note(note, volume, duration)
+            
+    def frere_jacques(self):
+        notes = [
+            NOTE_DO, NOTE_RE, NOTE_MI, NOTE_DO,
+            NOTE_DO, NOTE_RE, NOTE_MI, NOTE_DO,
+
+            NOTE_MI, NOTE_FA, NOTE_SO,
+            NOTE_MI, NOTE_FA, NOTE_SO,
+
+            NOTE_SO, NOTE_LA, NOTE_SO, NOTE_FA, NOTE_MI, NOTE_DO,
+            NOTE_SO, NOTE_LA, NOTE_SO, NOTE_FA, NOTE_MI, NOTE_DO,
+
+            NOTE_DO, NOTE_SO, NOTE_DO,
+            NOTE_DO, NOTE_SO, NOTE_DO
+        ]
+
+        durations = [
+            0.30, 0.30, 0.30, 0.60,
+            0.30, 0.30, 0.30, 0.60,
+
+            0.30, 0.30, 0.60,
+            0.30, 0.30, 0.60,
+
+            0.15, 0.15, 0.15, 0.15, 0.30, 0.60,
+            0.15, 0.15, 0.15, 0.15, 0.30, 0.60,
+
+            0.30, 0.30, 0.60,
+            0.30, 0.30, 0.60
+        ]
+
+        for note, duration in zip(notes, durations):
+            volume = self.myPotentiometer.getValue()
             self.play_note(note, volume, duration)

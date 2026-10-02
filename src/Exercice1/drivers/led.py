@@ -1,9 +1,8 @@
 class led:
-    def __init__(self, pin,timer):
+    def __init__(self, pin):
         self.pin = pin
         self.state = False
         self.currentValue = 1
-        self.timer = timer
 
 
 

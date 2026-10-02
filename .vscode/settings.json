@@ -17,5 +17,8 @@
     ],
     "micropico.syncFolder": "src/Exercice1",
     "micropico.alwaysStopRunningProgram": true,
-    "micropico.softResetAfterUpload": true
+    "micropico.softResetAfterUpload": true,
+    "material-icon-theme.folders.associations": {
+        "drivers": "tools"
+    }
 }

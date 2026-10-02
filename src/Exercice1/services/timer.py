@@ -1,4 +1,4 @@
-from constantes.time import *
+from constants.time import *
 import utime
 
 class timer:

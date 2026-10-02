@@ -1,7 +1,7 @@
-from constantes.time import SLEEP_TIME
+from constants.time import SLEEP_TIME
 from services.timer import timer
-from constantes.pin import BUTTON_PIN, LED_PIN
-from constantes.config import NUMBER_OF_LEVELS
+from constants.pin import BUTTON_PIN, LED_PIN
+from constants.config import NUMBER_OF_LEVELS
 from services.led_effect import effect_TicTicBoom
 
 from drivers.button import button
@@ -12,9 +12,9 @@ from drivers.led import led
 def setup():
     # Initialisations des composants
     myTimer = timer()
-    myLed = led(LED_PIN,myTimer)
+    myLed = led(LED_PIN)
     # Injections de dépendances dans boutons pour gestions des appuies
-    myButton = button(BUTTON_PIN,myTimer)
+    myButton = button(BUTTON_PIN)
 
     
     

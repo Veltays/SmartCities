@@ -17,7 +17,6 @@ def setup():
     myButton = button(BUTTON_PIN)
 
     
-    
     return myTimer, myLed, myButton
 
 

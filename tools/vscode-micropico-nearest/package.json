@@ -1,0 +1,35 @@
+{
+    "name": "smartcities-micropico-nearest",
+    "displayName": "SmartCities: MicroPico nearest project",
+    "description": "Uploads the nearest MicroPico project for the active file.",
+    "version": "1.0.0",
+    "publisher": "smartcities-local",
+    "engines": {
+        "vscode": ">=1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:smartcities.uploadNearestMicroPico"
+    ],
+    "extensionDependencies": [
+        "paulober.pico-w-go"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "smartcities.uploadNearestMicroPico",
+                "title": "SmartCities: Upload nearest MicroPico project"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "smartcities.uploadNearestMicroPico",
+                "key": "f5",
+                "when": "editorLangId == python && resourceScheme == file"
+            }
+        ]
+    }
+}

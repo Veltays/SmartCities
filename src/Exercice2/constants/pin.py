@@ -1,4 +1,6 @@
 import machine
 
-BUZZER_PIN = PWM(machine.Pin(18, machine.Pin.OUT))
-POTENTIOMER_PIN = machine.Pin(16, machine.Pin.IN)
+BUZZER_PIN = machine.PWM(machine.Pin(27, machine.Pin.OUT))
+POTENTIOMER_PIN = machine.ADC(machine.Pin(0, machine.Pin.IN))
+
+

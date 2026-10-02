@@ -2,10 +2,10 @@ from constants.note import *
 
 class PlayNote():
 
-    def __init__(self,MyBuzzer,timer):
+    def __init__(self,MyBuzzer,timer,myPotentiometer):
         self.myBuzzer = MyBuzzer
         self.myTimer = timer
-
+        self.myPotentiometer = myPotentiometer
 
 
     def play_note(self, note, volume, duration):
@@ -16,6 +16,8 @@ class PlayNote():
 
         self.myBuzzer.set_volume(0)
         self.myTimer.sleep(duration * 0.1)
+
+
 
     def one_piece_song(self):
         notes = [
@@ -32,4 +34,6 @@ class PlayNote():
             0.30, 0.90
         ]
         for note, duration in zip(notes, durations):
-            self.play_note(note, 1000, duration)
+            volume = self.myPotentiometer.getValue()
+            print("Valeur du potentio",self.myPotentiometer.getCurrentValue())
+            self.play_note(note, volume, duration)

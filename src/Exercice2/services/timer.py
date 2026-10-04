@@ -17,3 +17,8 @@ class Timer:
     def sleep(self, duration):
         utime.sleep(duration)
 
+    def ticks_ms(self):
+        return utime.ticks_ms()
+
+    def ticks_diff(self, current, previous):
+        return utime.ticks_diff(current, previous)

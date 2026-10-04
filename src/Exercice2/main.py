@@ -1,56 +1,64 @@
-from constants.pin import BUZZER_PIN, POTENTIOMER_PIN,BUTTON_PIN
+from constants.pin import *
 from constants.note import *
+from constants.time import *
+
 import machine
-from drivers.button import Button
 from drivers.buzzer import Buzzer
+from drivers.led import Led
 from drivers.potentiometer import Potentiemer
-from services.play_note import PlayNote
+from services.player_note import PlayerNote
 from services.timer import Timer
-    
-choice = 1
-
-def interrupt_handler(pin):
-    global choice
-    if(choice < 2):
-        choice = choice + 1
-    else:
-        choice = 1
-    
 
 
+
+from interrupts.button_interrupt import ButtonInterrupt
+
+
+
+
+
+
+
+# Setup
 def setup():
+    # Créations du drivers du Buzzer pour le controller
     myBuzzer = Buzzer(BUZZER_PIN)
-    BUTTON_PIN.irq(
-    trigger=machine.Pin.IRQ_FALLING,
-    handler=interrupt_handler
-)
-    myButton = Button(BUTTON_PIN)
+
     myTimer = Timer()
+
+    myButtonInterrupt = ButtonInterrupt(BUTTON_PIN,myTimer)
+
+
+
+    # Créations du drivers de ma led
+    myLed = Led(LED_PIN)
+
+
+    # Créations du drivers de mon potentiometre
     myPotentiometer = Potentiemer(POTENTIOMER_PIN)
-    myPlayer = PlayNote(myBuzzer,myTimer,myPotentiometer)
-    return myPlayer,myPotentiometer,myButton
 
-def loop(myPlayerNote,myPotentiometer):
-    global choice
+
+    myPlayer = PlayerNote(myBuzzer,myTimer,myPotentiometer,myLed)
+
+
+
+    return myPlayer, myButtonInterrupt
+
+
+
+
+def loop(myPlayerNote,myButtonInterrupt):
     while True:
-        chooseMusic(choice,myPlayerNote)
+        myPlayer.chooseMusic(
+            myButtonInterrupt.choice,
+            myButtonInterrupt
+        )
 
-
-        print("Valeur du potentio",myPotentiometer.getCurrentValue())
-
-        
-
-def chooseMusic(choice,myPlayerNote):
-        print("Your choice is",choice)
-        if choice == 1:
-            myPlayerNote.au_clair_de_la_lune()
-        elif choice == 2:
-            myPlayerNote.frere_jacques()
 
 
 if __name__ == "__main__":
-    myPlayer,myPotentiometer,myButton = setup()
-    loop(myPlayer,myPotentiometer)
+    myPlayer,myButtonInterrupt = setup()
+    loop(myPlayer,myButtonInterrupt)
 
 
 

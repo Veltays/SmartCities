@@ -35,7 +35,7 @@ Les broches sont configurées dans `constantes/pin.py`. Il suffit de modifier ce
 fichier pour adapter le programme à un autre branchement.
 
 
-![Photo de branchement](../../documentation/GPIO/circuit.gif)
+![Photo de branchement](../../documentation/GPIO/circuitExo1.gif)
 
 ## Organisation du code
 
@@ -122,7 +122,7 @@ L'effet utilise également `sleep_listening()`. Un appui sur le bouton peut donc
 l'interrompre sans attendre la fin complète de l'animation.
 
 
-# Problème rencontrer 
+## Problème rencontrer 
 
 Sleep était bloquant, le code ne pouvait donc pas voir si une actualisations des boutons avait été fait, n'ayant pas vu les interuptions sytème sur une GPIO j'ai du trouver une solutions
 

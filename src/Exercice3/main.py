@@ -7,7 +7,7 @@ from drivers.lcd import LCD
 from services.timer import Timer
 from constants.screen import LCD_SCREEN
 from constants.temp_sensor import HUMIDITY_SENSOR
-
+from constants.constants import *
 
 
 
@@ -17,6 +17,33 @@ def display_screen(temperature, conditionTemperature,LCDScreen):
     LCDScreen.write(f"Set :{conditionTemperature}")
     LCDScreen.set_cursor(1,0)
     LCDScreen.write(f"Ambient :{round(temperature)}")
+
+
+
+def handleTemperature(temperature,temp_consigne,myBuzzer,myLed,LCDScreen):
+
+
+            difference = temperature - temp_consigne
+
+            if difference < THRESHOLD_MAX_LIMIT:
+                print("ALARME")
+                myBuzzer.buzz()
+                myLed.toggle()
+                LCDScreen.clear_and_reset_cursor()
+                LCDScreen.write("ALARM")
+                return 200
+    
+            elif(difference <= THRESHOLD_LIMIT):
+                myBuzzer.stop_buzzer()
+                print("pas depassement")
+                myLed.toggle()
+                return 500
+
+            else:
+                 myLed.off()
+                 myBuzzer.stop_buzzer()
+                 return 500
+                 
 
 
 
@@ -41,35 +68,19 @@ def loop(myPotentiometer,LCDScreen,timer,myLed,myBuzzer):
     while True:
 
 
-
-        LCDScreen.clear_and_reset_cursor()
-
-
-
-
         temp_consigne = myPotentiometer.getValue()
         temperature = HUMIDITY_SENSOR.dht20_temperature()
+
+
+
+
         display_screen(temperature, temp_consigne,LCDScreen)
 
-        if temperature > (temp_consigne + 3):
-            print("depassement")
-            myBuzzer.start_alarm()
-            myLed.toggle()
-            LCDScreen.clear_and_reset_cursor()
-            LCDScreen.write("ALARM")
-
-        elif temperature > temp_consigne:
-            myBuzzer.stop_alarm()
-            print("pas depassement")
-            myLed.toggle()
-
-        else:
-            myBuzzer.stop_alarm()
 
 
+        frequency = handleTemperature(temperature,temp_consigne,myBuzzer,myLed,LCDScreen,)
 
-
-        timer.sleep(1)
+        timer.sleep_hertz(frequency)
 
 
 if __name__ == "__main__":

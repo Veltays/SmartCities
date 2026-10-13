@@ -11,6 +11,15 @@ from constants.temp_sensor import HUMIDITY_SENSOR
 
 
 
+
+def display_screen(temperature, conditionTemperature,LCDScreen):
+    LCDScreen.clear_and_reset_cursor()
+    LCDScreen.write(f"Set :{conditionTemperature}")
+    LCDScreen.set_cursor(1,0)
+    LCDScreen.write(f"Ambient :{round(temperature)}")
+
+
+
 # Setup
 def setup():
     # Créations du drivers du Buzzer pour le controller
@@ -28,9 +37,6 @@ def setup():
 
 
 
-
-
-
 def loop(myPotentiometer,LCDScreen,timer,myLed,myBuzzer):
     while True:
 
@@ -42,15 +48,8 @@ def loop(myPotentiometer,LCDScreen,timer,myLed,myBuzzer):
 
 
         temp_consigne = myPotentiometer.getValue()
-        LCDScreen.write(temp_consigne)
-
         temperature = HUMIDITY_SENSOR.dht20_temperature()
-        humidity = HUMIDITY_SENSOR.dht20_humidity()
-
-
-        print(f"Current value desired {temp_consigne} \n current Temperature {temperature} \n humidity {humidity} \n ------------------------------------------------------------------- ")
-
-
+        display_screen(temperature, temp_consigne,LCDScreen)
 
         if temperature > (temp_consigne + 3):
             print("depassement")

@@ -8,50 +8,33 @@ from services.timer import Timer
 from constants.screen import LCD_SCREEN
 from constants.temp_sensor import HUMIDITY_SENSOR
 from constants.constants import *
+from services.screen_service import *
 
-currentLoop = 0
-
-
-def display_screen(temperature, conditionTemperature, LCDScreen):
-    global currentLoop
-
-    LCDScreen.clear_and_reset_cursor()
-    LCDScreen.write(f"Set :{conditionTemperature}")
-    LCDScreen.set_cursor(1, 0)
-    LCDScreen.write(f"Ambient :{round(temperature)}")
-
-
-def blinkAlarm(LCDScreen):
-    global currentLoop
-
-    if (currentLoop % 2) == 0:
-        LCDScreen.write(f"ALARM")
-        print(f"UNCLEAR - current loop {currentLoop}")
-        currentLoop += 1
-
-    elif currentLoop == 1:
-        print(f"CLEAR - current loop {currentLoop}")
-        LCDScreen.clear_and_reset_cursor()
-        currentLoop = 0
+ALARM_IS_ON = False
 
 
 def handleTemperature(temperature, temp_consigne, myBuzzer, myLed, LCDScreen):
-
+    global ALARM_IS_ON
     difference = temperature - temp_consigne
 
     if difference < THRESHOLD_MAX_LIMIT:
+        ALARM_IS_ON = True
         myBuzzer.buzz()
         myLed.toggle()
-        LCDScreen.clear_and_reset_cursor()
-        blinkAlarm(LCDScreen)
+        if MODE == 1:
+            blinkAlarm(LCDScreen)
+        elif MODE == 2:
+            display_alarm_scroll(LCDScreen)
         return 200
 
     elif difference <= THRESHOLD_LIMIT:
+        ALARM_IS_ON = False
         myBuzzer.stop_buzzer()
         myLed.toggle()
         return 500
 
     else:
+        ALARM_IS_ON = False
         myLed.off()
         myBuzzer.stop_buzzer()
         return 500
@@ -74,12 +57,14 @@ def setup():
 
 
 def loop(myPotentiometer, LCDScreen, timer, myLed, myBuzzer):
+    global ALARM_IS_ON
     while True:
 
         temp_consigne = myPotentiometer.getValue()
         temperature = HUMIDITY_SENSOR.dht20_temperature()
 
-        display_screen(temperature, temp_consigne, LCDScreen)
+        if not ALARM_IS_ON:
+            display_screen(temperature, temp_consigne, LCDScreen)
 
         frequency = handleTemperature(
             temperature,

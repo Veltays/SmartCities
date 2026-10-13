@@ -130,13 +130,13 @@ class LCD1602(object):
     def no_autoscroll(self):
         self.display_control &= ~self.LCD_ENTRYSHIFTINCREMENT
         self.command(self.LCD_DISPLAYCONTROL  | self.display_control)
-        
+            
     def create_char(self, location, charmap):
         location &= 0x07
-        self.command(LCD_SETCGRAMADDR | (location << 3))
-        dta = bytearray([charmap])
-        self.i2c.writeto_mem(self.address, 0x40, dta)
-        
+        self.command(self.LCD_SETCGRAMADDR | (location << 3))
+        dta = bytearray(charmap)
+        self.i2c.writeto_mem(self.lcd_address, 0x40, dta)
+
     def command(self, command):
         command = bytearray([command])
         self.i2c.writeto_mem(self.lcd_address, 0x80, command)        

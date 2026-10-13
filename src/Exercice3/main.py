@@ -19,12 +19,15 @@ def handleTemperature(temperature, temp_consigne, myBuzzer, myLed, LCDScreen):
 
     if difference < THRESHOLD_MAX_LIMIT:
         ALARM_IS_ON = True
+
         myBuzzer.buzz()
-        myLed.toggle()
+        myLed.dimmer()
+
         if MODE == 1:
             blinkAlarm(LCDScreen)
         elif MODE == 2:
             display_alarm_scroll(LCDScreen)
+
         return 200
 
     elif difference <= THRESHOLD_LIMIT:
@@ -35,8 +38,8 @@ def handleTemperature(temperature, temp_consigne, myBuzzer, myLed, LCDScreen):
 
     else:
         ALARM_IS_ON = False
-        myLed.off()
         myBuzzer.stop_buzzer()
+        myLed.reset_dimmer()
         return 500
 
 

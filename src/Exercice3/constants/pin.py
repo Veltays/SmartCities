@@ -1,7 +1,6 @@
 import machine
 from library.dht11 import *
 
-
 # Généré un signal numériques
 BUZZER_PIN = machine.PWM(machine.Pin(27, machine.Pin.OUT))
 
@@ -19,8 +18,7 @@ I2C0_SDA_PIN = machine.Pin(8)
 I2C0_SCL_PIN = machine.Pin(9)
 
 
-
 # Pin COMPONENT
-LED_PIN = machine.Pin(18, machine.Pin.OUT)
+LED_PIN = machine.PWM(machine.Pin(18))
+LED_PIN.freq(1000)
 BUTTON_PIN = machine.Pin(16, machine.Pin.IN)
-

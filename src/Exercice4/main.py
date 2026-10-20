@@ -25,7 +25,7 @@ def loop(led, timer, soundSensor):
         if sound > threshold:
             current_time = timer.ticks_ms()
 
-            if timer.ticks_diff(current_time, last_beat) >= 150:
+            if timer.ticks_diff(current_time, last_beat) >= 10:
                 led.set_color(choice(COLORS))
                 last_beat = current_time
 

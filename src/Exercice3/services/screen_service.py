@@ -25,7 +25,7 @@ def display_screen(temperature, conditionTemperature, LCDScreen):
 
     LCDScreen.clear_and_reset_cursor()
     LCDScreen.write(f"Set :{conditionTemperature}")
-    LCDScreen.set_cursor(1, 0)
+    LCDScreen.set_cursor(0, 1)
     LCDScreen.write(f"Ambient :{round(temperature)}")
 
 

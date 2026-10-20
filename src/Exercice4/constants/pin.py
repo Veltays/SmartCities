@@ -25,3 +25,4 @@ BUTTON_PIN = machine.Pin(16, machine.Pin.IN)
 
 
 PIN_LED_WS = 18
+SOUND_SENSOR_PIN = machine.ADC(1)

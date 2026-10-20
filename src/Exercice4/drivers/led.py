@@ -1,67 +1,22 @@
+from constants.colors import *
+
+
 class Led:
     def __init__(self, pin):
         self.pin = pin
-        self.state = False
-        self.currentValue = 0
-
-        self.brightness = 0
-        self.step = 1000
-
-        self.off()
-
-    # GETTER AND SETTER
-
-    def get_state(self):
-        return self.state
-
-    def set_state(self, state):
-        self.state = state
-
-        if self.state:
-            self.set_value(65535)
-        else:
-            self.set_value(0)
-
-    def set_value(self, value):
-        if 0 <= value <= 65535:
-            self.currentValue = value
-            self.pin.duty_u16(value)
-        else:
-            print("Value must be between 0 and 65535")
-
-    def get_value(self):
-        return self.currentValue
-
-    # GESTION DE L'ETAT DE LA LED
+        self.currentColor = BLACK
 
     def on(self):
-        self.set_state(True)
+        self.currentColor = WHITE
+        self.pin.pixels_fill(self.currentColor)
+        self.pin.pixels_show()
 
     def off(self):
-        self.set_state(False)
+        self.currentColor = BLACK
+        self.pin.pixels_fill(self.currentColor)
+        self.pin.pixels_show()
 
-    def toggle(self):
-        if self.get_state():
-            self.off()
-        else:
-            self.on()
-
-    # DIMMER
-
-    def dimmer(self):
-        self.brightness += self.step
-
-        if self.brightness >= 65535:
-            self.brightness = 65535
-            self.step = -1000
-
-        elif self.brightness <= 0:
-            self.brightness = 0
-            self.step = 1000
-
-        self.set_value(self.brightness)
-
-    def reset_dimmer(self):
-        self.brightness = 0
-        self.step = 1000
-        self.off()
+    def set_color(self, color):
+        self.currentColor = color
+        self.pin.pixels_fill(self.currentColor)
+        self.pin.pixels_show()
